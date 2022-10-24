@@ -5,7 +5,7 @@
   "main": "nyt-crossword.mjs",
   "bin": "./nyt-crossword.mjs",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha --ui tdd"
   },
   "author": "",
   "license": "ISC",

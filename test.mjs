@@ -21,27 +21,27 @@ function file(date) {
     return f;
 }
 
-afterEach(() => {
+teardown(() => {
     cp.execSync('rm -f *.pdf');
 });
 
-describe('nyt-crossword', function () {
+suite('nyt-crossword', function () {
     this.timeout(0);
     this.slow(7000);
 
-    it('No arg', () => {
+    test('No arg', () => {
         let f = file(new Date());
         cp.execSync('npx nyt-crossword');
         assert.ok(fs.existsSync(f));
     });
 
-    it('1 date', () => {
+    test('1 date', () => {
         let f = file(new Date('2022-10-24'));
         cp.execSync('npx nyt-crossword 2022-10-24');
         assert.ok(fs.existsSync(f));
     });
 
-    it('2 dates', () => {
+    test('2 dates', () => {
         let a = file(new Date('2022-10-23'));
         let b = file(new Date('2022-10-24'));
         cp.execSync('npx nyt-crossword 2022-10-23 2022-10-24');
@@ -49,7 +49,7 @@ describe('nyt-crossword', function () {
         assert.ok(fs.existsSync(b));
     });
 
-    it('2 dates, --day', () => {
+    test('2 dates, --day', () => {
         let a = file(new Date('2022-10-23'));
         let b = file(new Date('2022-10-24'));
         cp.execSync('npx nyt-crossword --day sun 2022-10-23 2022-10-24');
@@ -57,7 +57,7 @@ describe('nyt-crossword', function () {
         assert.ok(!fs.existsSync(b));
     });
 
-    it('Future date', () => {
+    test('Future date', () => {
         assert.doesNotThrow(() => {
             cp.execSync('npx nyt-crossword 2050-01-01');
         });
