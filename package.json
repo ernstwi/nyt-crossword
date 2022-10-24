@@ -5,7 +5,7 @@
   "main": "nyt-crossword.mjs",
   "bin": "./nyt-crossword.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "arrowParens": "avoid"
   },
   "devDependencies": {
+    "mocha": "^10.1.0",
     "prettier": "2.7.1"
   }
 }
