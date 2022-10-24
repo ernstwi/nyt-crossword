@@ -28,6 +28,9 @@ let arg = {
 let argv = process.argv.slice(2);
 
 for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === '--help' || argv[i] === '-h')
+        usage(0);
+
     if (argv[i] === `--day`) {
         i++;
         let day = argv[i];
