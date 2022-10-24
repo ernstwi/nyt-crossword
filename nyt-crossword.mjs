@@ -40,7 +40,7 @@ for (let i = 0; i < argv.length; i++) {
 
     //  > If called with an invalid date string ... [Date constructor] returns a Date
     //  object whose toString() method returns the literal string "Invalid Date".
-    if (date === 'Invalid Date') usage(1);
+    if (date.toString() === 'Invalid Date') usage(1);
 
     if (arg.start === null) arg.start = date;
     else arg.end = date;
