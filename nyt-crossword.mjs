@@ -3,7 +3,7 @@
 import fs from 'fs';
 import https from 'https';
 
-import dateFormat from 'dateformat';
+import dateFormat, { masks } from 'dateformat';
 import puppeteer from 'puppeteer';
 
 // -----------------------------------------------------------------------------
@@ -45,24 +45,39 @@ for (let i = 0; i < argv.length; i++) {
     else arg.end = date;
 }
 
-if (arg.end !== null && arg.end < arg.start) usage(1);
-
-console.log(arg);
-process.exit(0);
+if (arg.start === null) arg.start = new Date();
+if (arg.end === null) arg.end = new Date(arg.start);
+if (arg.end < arg.start) usage(1);
 
 // -----------------------------------------------------------------------------
 
 if (!fs.existsSync('cookies.json')) await getCookies();
-let cookies = JSON.parse(fs.readFileSync('cookies.json'));
-
-let pdf = await request(
-    crossword(new Date(2022, 9, 1)),
-    cookies.map(c => `${c.name}=${c.value}`)
+let cookies = JSON.parse(fs.readFileSync('cookies.json')).map(
+    c => `${c.name}=${c.value}`
 );
 
-fs.writeFileSync('out.pdf', pdf, { encoding: 'binary' });
+for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
+    let iso = dateFormat(date, masks.isoDate);
+    process.stdout.write(`${iso}... `);
+    let pdf;
+    try {
+        let file = `${iso}.pdf`;
+        pdf = await request(crossword(date), cookies);
+        fs.writeFileSync(file, pdf, {
+            encoding: 'binary'
+        });
+        process.stdout.write(color(file, 32));
+    } catch (err) {
+        process.stdout.write(color(err, 31));
+    }
+    process.stdout.write('\n');
+}
 
 // ---- Helpers ----------------------------------------------------------------
+
+function color(str, code) {
+    return `\x1b[${code}m${str}\x1b[0m`;
+}
 
 function usage(status) {
     console.log(
