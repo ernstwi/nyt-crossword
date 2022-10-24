@@ -87,7 +87,7 @@ function color(str, code) {
 function usage(status) {
     let msg = `${
         JSON.parse(fs.readFileSync('package.json')).name
-    } [--day (mon|tue|wed|thu|fri|sat|sun>)] <start> [<end>]`;
+    } [--day (mon|tue|wed|thu|fri|sat|sun)] <start> [<end>]`;
     if (status === 1) console.error(color(msg, 31));
     else console.log(msg);
     process.exit(status);
