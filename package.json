@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dateformat": "^5.0.3",
     "puppeteer": "^19.1.0"
   },
   "prettier": {
