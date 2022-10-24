@@ -1,0 +1,23 @@
+{
+  "name": "nyt-crossword",
+  "version": "1.0.0",
+  "description": "",
+  "main": "nyt-crossword.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^19.1.0"
+  },
+  "prettier": {
+    "tabWidth": 4,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "arrowParens": "avoid"
+  },
+  "devDependencies": {
+    "prettier": "2.7.1"
+  }
+}
