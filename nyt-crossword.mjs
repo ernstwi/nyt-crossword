@@ -58,6 +58,8 @@ let cookies = JSON.parse(fs.readFileSync('cookies.json')).map(
 );
 
 for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
+    if (arg.day !== null && date.getDay() !== arg.day) continue;
+
     let iso = dateFormat(date, masks.isoDate);
     process.stdout.write(`${iso}... `);
     let pdf;
