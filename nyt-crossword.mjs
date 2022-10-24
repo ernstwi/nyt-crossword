@@ -6,6 +6,52 @@ import https from 'https';
 import dateFormat from 'dateformat';
 import puppeteer from 'puppeteer';
 
+// -----------------------------------------------------------------------------
+
+let days = new Map([
+    ['sun', 0],
+    ['mon', 1],
+    ['tue', 2],
+    ['wed', 3],
+    ['thu', 4],
+    ['fri', 5],
+    ['sat', 6]
+]);
+
+let arg = {
+    start: null,
+    end: null,
+    day: null
+};
+
+let argv = process.argv.slice(2);
+
+for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === `--day`) {
+        i++;
+        let day = argv[i];
+        if (!days.has(day)) usage(1);
+        arg.day = days.get(day);
+        continue;
+    }
+
+    let date = new Date(argv[i]);
+
+    //  > If called with an invalid date string ... [Date constructor] returns a Date
+    //  object whose toString() method returns the literal string "Invalid Date".
+    if (date === 'Invalid Date') usage(1);
+
+    if (arg.start === null) arg.start = date;
+    else arg.end = date;
+}
+
+if (arg.end !== null && arg.end < arg.start) usage(1);
+
+console.log(arg);
+process.exit(0);
+
+// -----------------------------------------------------------------------------
+
 if (!fs.existsSync('cookies.json')) await getCookies();
 let cookies = JSON.parse(fs.readFileSync('cookies.json'));
 
@@ -17,6 +63,15 @@ let pdf = await request(
 fs.writeFileSync('out.pdf', pdf, { encoding: 'binary' });
 
 // ---- Helpers ----------------------------------------------------------------
+
+function usage(status) {
+    console.log(
+        `${
+            JSON.parse(fs.readFileSync('package.json')).name
+        } [--day (mon|tue|wed|thu|fri|sat|sun>)] <start> [<end>]`
+    );
+    process.exit(status);
+}
 
 function request(url, cookies) {
     return new Promise((resolve, reject) => {
