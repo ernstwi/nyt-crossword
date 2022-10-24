@@ -17,6 +17,7 @@ let days = new Map([
     ['fri', 5],
     ['sat', 6]
 ]);
+let days_ = new Map([...days].map(([k, v]) => [v, k]));
 
 let arg = {
     start: null,
@@ -61,7 +62,7 @@ for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
     process.stdout.write(`${iso}... `);
     let pdf;
     try {
-        let file = `${iso}.pdf`;
+        let file = `${days_.get(date.getDay())}-${iso}.pdf`;
         pdf = await request(crossword(date), cookies);
         fs.writeFileSync(file, pdf, {
             encoding: 'binary'
