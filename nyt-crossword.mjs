@@ -6,7 +6,7 @@ import https from 'https';
 import dateFormat, { masks } from 'dateformat';
 import puppeteer from 'puppeteer';
 
-// -----------------------------------------------------------------------------
+// ---- Setup and arg parsing --------------------------------------------------
 
 let days = new Map([
     ['sun', 0],
@@ -52,7 +52,7 @@ if (arg.start === null) arg.start = new Date();
 if (arg.end === null) arg.end = new Date(arg.start);
 if (arg.end < arg.start) usage(1);
 
-// -----------------------------------------------------------------------------
+// ---- Download ---------------------------------------------------------------
 
 if (!fs.existsSync('cookies.json')) await getCookies();
 let cookies = JSON.parse(fs.readFileSync('cookies.json')).map(
