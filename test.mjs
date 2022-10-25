@@ -58,8 +58,10 @@ suite('nyt-crossword', function () {
             .toString();
         assert.strictEqual(
             o,
-            '2022-10-23... \x1B[32msun-2022-10-23.pdf\x1B[0m\n' +
+            [
+                '2022-10-23... \x1B[32msun-2022-10-23.pdf\x1B[0m\n',
                 '2022-10-24... \x1B[32mmon-2022-10-24.pdf\x1B[0m\n'
+            ].join('')
         );
         assert.ok(fs.existsSync(a));
         assert.ok(fs.existsSync(b));
