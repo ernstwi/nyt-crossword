@@ -57,10 +57,11 @@ if (arg.end < arg.start) usage(1);
 
 let cookiesFile = new URL('cookies.json', import.meta.url);
 if (!fs.existsSync(cookiesFile))
-    fs.writeFileSync(cookiesFile, JSON.stringify(await getCookies()));
-let cookies = JSON.parse(fs.readFileSync(cookiesFile)).map(
-    c => `${c.name}=${c.value}`
-);
+    fs.writeFileSync(
+        cookiesFile,
+        JSON.stringify(await getCookies().map(c => `${c.name}=${c.value}`))
+    );
+let cookies = JSON.parse(fs.readFileSync(cookiesFile));
 
 for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
     if (arg.day !== null && date.getDay() !== arg.day) continue;
