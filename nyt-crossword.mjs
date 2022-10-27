@@ -59,7 +59,7 @@ let cookiesFile = new URL('cookies.json', import.meta.url);
 if (!fs.existsSync(cookiesFile))
     fs.writeFileSync(
         cookiesFile,
-        JSON.stringify(await getCookies().map(c => `${c.name}=${c.value}`))
+        JSON.stringify((await getCookies()).map(c => `${c.name}=${c.value}`))
     );
 let cookies = JSON.parse(fs.readFileSync(cookiesFile));
 
