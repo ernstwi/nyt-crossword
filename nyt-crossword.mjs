@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import https from 'https';
+import path from 'path';
 
 import dateFormat, { masks } from 'dateformat';
 import puppeteer from 'puppeteer';
@@ -54,8 +55,10 @@ if (arg.end < arg.start) usage(1);
 
 // ---- Download ---------------------------------------------------------------
 
-if (!fs.existsSync('cookies.json')) await getCookies();
-let cookies = JSON.parse(fs.readFileSync('cookies.json')).map(
+let cookiesFile = new URL('cookies.json', import.meta.url);
+if (!fs.existsSync(cookiesFile))
+    fs.writeFileSync(cookiesFile, JSON.stringify(await getCookies()));
+let cookies = JSON.parse(fs.readFileSync(cookiesFile)).map(
     c => `${c.name}=${c.value}`
 );
 
@@ -86,7 +89,8 @@ function color(str, code) {
 
 function usage(status) {
     let msg = `${
-        JSON.parse(fs.readFileSync('package.json')).name
+        JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url)))
+            .name
     } [--day (mon|tue|wed|thu|fri|sat|sun)] [<start> [<end>]]`;
     if (status === 1) console.error(color(msg, 31));
     else console.log(msg);
@@ -133,6 +137,7 @@ async function getCookies() {
             timeout: 0
         }
     );
-    fs.writeFileSync('cookies.json', JSON.stringify(await page.cookies()));
+    let res = await page.cookies();
     await browser.close();
+    return res;
 }
