@@ -4,7 +4,7 @@ import fs from 'fs';
 import https from 'https';
 import path from 'path';
 
-import dateFormat, { masks } from 'dateformat';
+import dateFormat from 'dateformat';
 import puppeteer from 'puppeteer';
 
 // ---- Setup and arg parsing --------------------------------------------------
