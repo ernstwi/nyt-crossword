@@ -18,7 +18,6 @@ let days = new Map([
     ['fri', 5],
     ['sat', 6]
 ]);
-let days_ = new Map([...days].map(([k, v]) => [v, k]));
 
 let arg = {
     start: null,
