@@ -69,6 +69,16 @@ suite('nyt-crossword', function () {
         assert.ok(!fs.existsSync(b));
     });
 
+    test('1 date, --latex', () => {
+        let f = file(new Date('2022-10-24'));
+        let o = cp.execSync('npx nyt-crossword 2022-10-24 --latex').toString();
+        assert.strictEqual(
+            o,
+            '2022-10-24... \x1B[32mmon-2022-10-24.pdf\x1B[0m\n'
+        );
+        assert.ok(fs.existsSync(f));
+    });
+
     test('Future date', () => {
         assert.doesNotThrow(() => {
             let o = cp.execSync('npx nyt-crossword 2050-01-01').toString();
