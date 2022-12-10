@@ -4,20 +4,8 @@ import fs from 'fs';
 
 import dateFormat, { masks } from 'dateformat';
 
-let days = new Map([
-    ['sun', 0],
-    ['mon', 1],
-    ['tue', 2],
-    ['wed', 3],
-    ['thu', 4],
-    ['fri', 5],
-    ['sat', 6]
-]);
-let days_ = new Map([...days].map(([k, v]) => [v, k]));
-
 function file(date) {
-    let f = `${days_.get(date.getDay())}-${iso(date)}.pdf`;
-    return f;
+    return dateFormat(date, 'ddd-yyyy-mm-dd".pdf"').toLowerCase();
 }
 
 function iso(date) {
