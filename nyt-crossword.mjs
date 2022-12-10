@@ -71,7 +71,7 @@ for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
     let pdf;
     try {
         let file = `${days_.get(date.getDay())}-${iso}.pdf`;
-        pdf = await request(crossword(date), cookies);
+        pdf = await fetchPdf(crosswordUrl(date), cookies);
         fs.writeFileSync(file, pdf, {
             encoding: 'binary'
         });
@@ -98,7 +98,7 @@ function usage(status) {
     process.exit(status);
 }
 
-function request(url, cookies) {
+function fetchPdf(url, cookies) {
     return new Promise((resolve, reject) => {
         let req = https.request(url, {}, function (res) {
             if (res.statusCode < 200 || res.statusCode >= 300) {
@@ -117,7 +117,7 @@ function request(url, cookies) {
     });
 }
 
-function crossword(date) {
+function crosswordUrl(date) {
     return [
         'https://www.nytimes.com/svc/crosswords/v2/puzzle/print/',
         dateFormat(date, 'mmmddyy'),
