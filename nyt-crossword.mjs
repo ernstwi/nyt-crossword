@@ -140,7 +140,9 @@ function latex(pdf, date) {
         }
     );
 
-    return fs.readFileSync(output);
+    let res = fs.readFileSync(output);
+    fs.rmSync(dir, { recursive: true, force: true });
+    return res;
 }
 
 function fetchPdf(url, cookies) {
