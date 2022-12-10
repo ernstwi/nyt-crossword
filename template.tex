@@ -1,0 +1,14 @@
+\documentclass[a4paper]{article}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{pdfpages}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\renewcommand{\headrulewidth}{0pt}
+\pagenumbering{gobble}
+
+\fancyhead[C]{\emph{\header}}
+
+\begin{document}
+\includepdf[pages=-,pagecommand={},width=\textwidth]{\crosswordfile}
+\end{document}

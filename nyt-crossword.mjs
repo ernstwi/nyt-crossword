@@ -2,12 +2,18 @@
 
 import fs from 'fs';
 import https from 'https';
+import os from 'os';
 import path from 'path';
+import url from 'url';
+import cp from 'child_process';
 
 import dateFormat from 'dateformat';
 import puppeteer from 'puppeteer';
 
 // ---- Setup and arg parsing --------------------------------------------------
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let days = new Map([
     ['sun', 0],
@@ -22,7 +28,8 @@ let days = new Map([
 let arg = {
     start: null,
     end: null,
-    day: null
+    day: null,
+    latex: false
 };
 
 let argv = process.argv.slice(2);
@@ -36,6 +43,22 @@ for (let i = 0; i < argv.length; i++) {
         if (!days.has(day)) usage(1);
         arg.day = days.get(day);
         continue;
+    }
+
+    switch (argv[i]) {
+        case '--help':
+        case '-h':
+            usage(0);
+            break;
+        case '--day':
+            i++;
+            let day = argv[i];
+            if (!days.has(day)) usage(1);
+            arg.day = days.get(day);
+            continue;
+        case '--latex':
+            arg.latex = true;
+            continue;
     }
 
     let date = new Date(argv[i]);
@@ -72,6 +95,8 @@ for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
 
     try {
         let pdf = await fetchPdf(crosswordUrl(date), cookies);
+        if (arg.latex) pdf = latex(pdf, date);
+
         fs.writeFileSync(file, pdf, {
             encoding: 'binary'
         });
@@ -96,6 +121,26 @@ function usage(status) {
     if (status === 1) console.error(color(msg, 31));
     else console.log(msg);
     process.exit(status);
+}
+
+function latex(pdf, date) {
+    let dir = fs.mkdtempSync(os.tmpdir() + path.sep);
+    let input = path.join(dir, 'in.pdf');
+    let output = path.join(dir, 'template.pdf');
+    let template = path.join(__dirname, 'template.tex');
+    let header = dateFormat(date, 'dddd, mmmm d, yyyy');
+
+    fs.writeFileSync(input, pdf, {
+        encoding: 'binary'
+    });
+    cp.execSync(
+        `pdflatex "\\def\\header{${header}} \\def\\crosswordfile{${input}} \\input{${template}}"`,
+        {
+            cwd: dir
+        }
+    );
+
+    return fs.readFileSync(output);
 }
 
 function fetchPdf(url, cookies) {
