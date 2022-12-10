@@ -66,12 +66,13 @@ let cookies = JSON.parse(fs.readFileSync(cookiesFile));
 for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
     if (arg.day !== null && date.getDay() !== arg.day) continue;
 
-    let iso = dateFormat(date, masks.isoDate);
+    let iso = dateFormat(date, 'yyyy-mm-dd');
+    let file = dateFormat(date, 'ddd-yyyy-mm-dd.pdf').toLowerCase();
+
     process.stdout.write(`${iso}... `);
-    let pdf;
+
     try {
-        let file = `${days_.get(date.getDay())}-${iso}.pdf`;
-        pdf = await fetchPdf(crosswordUrl(date), cookies);
+        let pdf = await fetchPdf(crosswordUrl(date), cookies);
         fs.writeFileSync(file, pdf, {
             encoding: 'binary'
         });
