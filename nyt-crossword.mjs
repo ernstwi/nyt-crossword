@@ -97,9 +97,7 @@ for (let date = arg.start; date <= arg.end; date.setDate(date.getDate() + 1)) {
         let pdf = await fetchPdf(crosswordUrl(date), cookies);
         if (arg.latex) pdf = latex(pdf, date);
 
-        fs.writeFileSync(file, pdf, {
-            encoding: 'binary'
-        });
+        fs.writeFileSync(file, pdf);
         process.stdout.write(color(file, 32));
     } catch (err) {
         process.stdout.write(color(err, 31));
@@ -130,9 +128,7 @@ function latex(pdf, date) {
     let template = path.join(__dirname, 'template.tex');
     let header = dateFormat(date, 'dddd, mmmm d, yyyy');
 
-    fs.writeFileSync(input, pdf, {
-        encoding: 'binary'
-    });
+    fs.writeFileSync(input, pdf);
     cp.execSync(
         `pdflatex "\\def\\header{${header}} \\def\\crosswordfile{${input}} \\input{${template}}"`,
         {
@@ -151,12 +147,11 @@ function fetchPdf(url, cookies) {
             if (res.statusCode < 200 || res.statusCode >= 300) {
                 return reject(new Error(res.statusCode));
             }
-            let data = '';
-            res.setEncoding('binary');
+            let data = [];
             res.on('data', chunk => {
-                data += chunk;
+                data.push(chunk);
             });
-            res.on('end', () => resolve(data));
+            res.on('end', () => resolve(Buffer.concat(data)));
         });
         req.on('error', err => reject(err));
         req.setHeader('Cookie', cookies);
