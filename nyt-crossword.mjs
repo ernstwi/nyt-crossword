@@ -115,7 +115,7 @@ function usage(status) {
     let msg = `${
         JSON.parse(fs.readFileSync(new URL('package.json', import.meta.url)))
             .name
-    } [--day (mon|tue|wed|thu|fri|sat|sun)] [<start> [<end>]]`;
+    } [--day (mon|tue|wed|thu|fri|sat|sun)] [--latex] [<start> [<end>]]`;
     if (status === 1) console.error(color(msg, 31));
     else console.log(msg);
     process.exit(status);
